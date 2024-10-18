@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Login() {
+  useLayoutEffect(() => {
+    document.title = "Login";
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg border border-gray-300">
@@ -35,7 +39,7 @@ function Login() {
                 autoComplete="email"
                 required
                 placeholder="you@example.com"
-                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:border-violet-600"
+                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
               />
             </div>
             <div>
@@ -51,7 +55,7 @@ function Login() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:border-violet-600"
+                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
                 placeholder="••••••••"
               />
             </div>
@@ -60,8 +64,8 @@ function Login() {
           <div className="flex items-center justify-end">
             <div className="text-sm">
               <Link
-                href="/forgot-password"
-                className="font-medium hover:text-violet-600 hover:underline transition-all duration-300 ease-in-out"
+                to="/forgot-password"
+                className="font-medium underline hover:text-violet-600 transition-all duration-300 ease-in-out"
               >
                 Forgot your password?
               </Link>
@@ -69,7 +73,10 @@ function Login() {
           </div>
 
           <div>
-            <button type="submit" className="w-full bg-violet-600 text-white py-3 rounded-md font-bold capitalize hover:bg-violet-700 transition-all duration-300 ease-in-out">
+            <button
+              type="submit"
+              className="w-full bg-violet-600 text-white py-3 rounded-md font-bold capitalize hover:bg-violet-700 transition-all duration-300 ease-in-out"
+            >
               Sign in
             </button>
           </div>

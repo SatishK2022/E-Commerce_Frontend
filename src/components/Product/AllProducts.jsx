@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import useScrollToTop from "../../hooks/userScrollToTop";
 import { CgSpinner } from "react-icons/cg";
 
@@ -33,7 +34,8 @@ function AllProducts() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => (
-            <div
+            <Link
+              to={`/product/${product.id}`}
               key={product.id}
               className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col h-full"
             >
@@ -62,7 +64,7 @@ function AllProducts() {
                   </button>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

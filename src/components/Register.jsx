@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Register = () => {
+  useLayoutEffect(() => {
+    document.title = "Register";
+  }, []);
+
   return (
     <div className="min-h-screen py-10 flex items-center justify-center bg-gray-100">
       <div className="max-w-lg w-full space-y-8 p-8 bg-white rounded-xl shadow-lg border border-gray-300">
@@ -22,38 +26,38 @@ const Register = () => {
         <form className="mt-8 space-y-6" action="#" method="POST">
           <div className="space-y-4">
             <div className="w-full flex flex-col gap-2 md:flex-row">
-                <div className="w-full md:w-1/2 flex flex-col gap-2">
-                    <label
-                        htmlFor="firstname"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                        First Name
-                    </label>
-                    <input
-                        type="text"
-                        name="firstname"
-                        id="firstname"
-                        required
-                        placeholder="John"
-                        className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:border-violet-600"
-                    />
-                </div>
-                <div className="w-full md:w-1/2 flex flex-col gap-2">
-                    <label
-                        htmlFor="lastname"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                        Last Name
-                    </label>
-                    <input
-                        type="text"
-                        name="lastname"
-                        id="lastname"
-                        required
-                        placeholder="Doe"
-                        className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:border-violet-600"
-                    />
-                </div>
+              <div className="w-full md:w-1/2 flex flex-col gap-2">
+                <label
+                  htmlFor="firstname"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  name="firstname"
+                  id="firstname"
+                  required
+                  placeholder="John"
+                  className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
+                />
+              </div>
+              <div className="w-full md:w-1/2 flex flex-col gap-2">
+                <label
+                  htmlFor="lastname"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  name="lastname"
+                  id="lastname"
+                  required
+                  placeholder="Doe"
+                  className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
+                />
+              </div>
             </div>
             <div>
               <label
@@ -69,7 +73,7 @@ const Register = () => {
                 autoComplete="email"
                 required
                 placeholder="you@example.com"
-                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:border-violet-600"
+                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
               />
             </div>
             <div>
@@ -85,7 +89,7 @@ const Register = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:border-violet-600"
+                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
                 placeholder="••••••••"
               />
             </div>
@@ -102,25 +106,25 @@ const Register = () => {
                 type="phone"
                 autoComplete="phone"
                 required
-                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:border-violet-600"
+                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
                 placeholder="+91 1234567890"
               />
             </div>
             <div className="w-full flex flex-col gap-2">
-                <label
-                    htmlFor="dateofbirth"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                    Date of Birth
-                </label>
-                <input
-                    id="dateofbirth"
-                    name="dateofbirth"
-                    type="date"
-                    autoComplete="dateofbirth"
-                    required
-                    className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:border-violet-600"
-                />
+              <label
+                htmlFor="dateofbirth"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Date of Birth
+              </label>
+              <input
+                id="dateofbirth"
+                name="dateofbirth"
+                type="date"
+                autoComplete="dateofbirth"
+                required
+                className="w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
+              />
             </div>
           </div>
           <div>

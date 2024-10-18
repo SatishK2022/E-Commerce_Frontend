@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { BiMapPin, BiPhone } from "react-icons/bi";
-import { BsMailbox } from "react-icons/bs";
+import { BiMailSend, BiMapPin, BiPhone } from "react-icons/bi";
 
 function Contact() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -47,7 +46,7 @@ function Contact() {
                           name="name"
                           type="text"
                           required
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
                           placeholder="Your name"
                         />
                       </div>
@@ -65,7 +64,7 @@ function Contact() {
                           autoComplete="email"
                           required
                           placeholder="you@example.com"
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
                         />
                       </div>
                       <div>
@@ -80,7 +79,7 @@ function Contact() {
                           name="subject"
                           type="text"
                           required
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
                           placeholder="Your subject"
                         />
                       </div>
@@ -96,7 +95,7 @@ function Contact() {
                           name="message"
                           rows="4"
                           required
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
                           placeholder="Your message here..."
                         />
                       </div>
@@ -123,7 +122,7 @@ function Contact() {
               </div>
               <div className="space-y-4">
                 <div className="flex items-center group">
-                  <BsMailbox className="h-8 w-8 text-violet-500 mr-3 group-hover:text-violet-600 transition-colors duration-300" />
+                  <BiMailSend className="h-8 w-8 text-violet-500 mr-3 group-hover:text-violet-600 transition-colors duration-300" />
                   <span className="text-gray-700 group-hover:text-violet-600 transition-colors duration-300">support@ourstore.com</span>
                 </div>
                 <div className="flex items-center group">
