@@ -55,10 +55,10 @@ function Categories() {
   ];
 
   return (
-    <main className="max-w-7xl mx-auto py-12 sm:py-16 lg:py-20 min-h-screen bg-gray-50">
+    <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 min-h-screen bg-gray-50">
       <div className="px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">
-          Our <span className="text-violet-600 border-b-4 border-violet-600 pb-2">Categories</span>
+        <h1 className="text-4xl font-bold text-center mb-12 text-gray-800 underline decoration-violet-600 underline-offset-8 pb-4">
+          Our <span className="text-violet-600">Categories</span>
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {categories.map((category) => (

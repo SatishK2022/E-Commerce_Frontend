@@ -14,7 +14,7 @@ function Contact() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+              <h2 className="text-2xl font-bold text-violet-600 mb-6">
                 Send us a message
               </h2>
               <div className="mt-4">
@@ -115,24 +115,24 @@ function Contact() {
             </div>
           </div>
           <div className="space-y-8">
-            <div className="bg-white p-4 rounded-lg shadow-md border border-gray-300">
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-800">
+            <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-violet-600">
                   Contact Information
                 </h2>
               </div>
-              <div className="mt-4">
-                <div className="flex items-center">
-                  <BsMailbox className="h-6 w-6 text-primary mr-2" />
-                  <span className="text-gray-700">support@ourstore.com</span>
+              <div className="space-y-4">
+                <div className="flex items-center group">
+                  <BsMailbox className="h-8 w-8 text-violet-500 mr-3 group-hover:text-violet-600 transition-colors duration-300" />
+                  <span className="text-gray-700 group-hover:text-violet-600 transition-colors duration-300">support@ourstore.com</span>
                 </div>
-                <div className="flex items-center">
-                  <BiPhone className="h-6 w-6 text-primary mr-2" />
-                  <span className="text-gray-700">+1 (555) 123-4567</span>
+                <div className="flex items-center group">
+                  <BiPhone className="h-8 w-8 text-violet-500 mr-3 group-hover:text-violet-600 transition-colors duration-300" />
+                  <span className="text-gray-700 group-hover:text-violet-600 transition-colors duration-300">+1 (555) 123-4567</span>
                 </div>
-                <div className="flex items-center">
-                  <BiMapPin className="h-6 w-6 text-primary mr-2" />
-                  <span className="text-gray-700">
+                <div className="flex items-center group">
+                  <BiMapPin className="h-8 w-8 text-violet-500 mr-3 group-hover:text-violet-600 transition-colors duration-300" />
+                  <span className="text-gray-700 group-hover:text-violet-600 transition-colors duration-300">
                     123 E-commerce St, Online City, 12345
                   </span>
                 </div>
@@ -140,7 +140,7 @@ function Contact() {
             </div>
             <div className="bg-white p-4 rounded-lg shadow-md border border-gray-300">
               <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-800">
+                <h2 className="text-2xl font-bold text-violet-600">
                   Our Location
                 </h2>
               </div>

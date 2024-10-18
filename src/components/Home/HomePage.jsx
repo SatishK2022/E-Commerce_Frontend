@@ -1,4 +1,4 @@
-import { CgShoppingCart } from "react-icons/cg";
+import { CgShoppingCart, CgSpinner } from "react-icons/cg";
 import heroSection from "../../assets/hero-section.png";
 import { useState, useEffect } from "react";
 import { BiHeart, BiStar } from "react-icons/bi";
@@ -89,59 +89,65 @@ function HomePage() {
             <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-800 underline decoration-violet-600 underline-offset-8 pb-4">
               Featured <span className="text-violet-600">Products</span>
             </h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-              {products.slice(0, 4).map((product) => (
-                <div
-                  key={product.id}
-                  className="group bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl flex flex-col"
-                >
-                  <div className="relative p-4 flex-grow flex items-center justify-center">
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="w-full h-full object-contain max-h-48 transition-transform duration-300 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <button className="bg-white text-gray-800 px-4 py-2 rounded-full font-semibold transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                        Quick View
-                      </button>
+            {products.length === 0 ? (
+              <div className="flex justify-center items-center h-64">
+                <CgSpinner className="animate-spin text-violet-600 text-4xl" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {products.slice(0, 4).map((product) => (
+                  <div
+                    key={product.id}
+                    className="group bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl flex flex-col"
+                  >
+                    <div className="relative p-4 flex-grow flex items-center justify-center">
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-full h-full object-contain max-h-48 transition-transform duration-300 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <button className="bg-white text-gray-800 px-4 py-2 rounded-full font-semibold transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                          Quick View
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">
+                        {product.title}
+                      </h3>
+                      <div className="flex items-center mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <BiStar
+                            key={i}
+                            className={`h-5 w-5 ${
+                              i < Math.floor(product.rating.rate)
+                                ? "text-yellow-400"
+                                : "text-gray-300"
+                            }`}
+                            fill="currentColor"
+                          />
+                        ))}
+                        <span className="ml-2 text-sm text-gray-600">
+                          ({product.rating.count})
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-2xl font-bold text-violet-600">
+                          ${product.price.toFixed(2)}
+                        </span>
+                        <button
+                          onClick={() => addToCart(product)}
+                          className="flex items-center justify-center bg-violet-600 text-white p-2 rounded-full hover:bg-violet-700 transition-colors duration-300"
+                        >
+                          <CgShoppingCart className="h-6 w-6" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">
-                      {product.title}
-                    </h3>
-                    <div className="flex items-center mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <BiStar
-                          key={i}
-                          className={`h-5 w-5 ${
-                            i < Math.floor(product.rating.rate)
-                              ? "text-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                          fill="currentColor"
-                        />
-                      ))}
-                      <span className="ml-2 text-sm text-gray-600">
-                        ({product.rating.count})
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-violet-600">
-                        ${product.price.toFixed(2)}
-                      </span>
-                      <button
-                        onClick={() => addToCart(product)}
-                        className="flex items-center justify-center bg-violet-600 text-white p-2 rounded-full hover:bg-violet-700 transition-colors duration-300"
-                      >
-                        <CgShoppingCart className="h-6 w-6" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
             <div className="mt-16 text-center">
               <Link to="/products">
                 <button className="px-8 py-3 rounded-full bg-violet-600 text-white font-bold hover:bg-violet-700 transition-all duration-300 ease-in shadow-lg hover:shadow-xl">
@@ -153,7 +159,7 @@ function HomePage() {
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
-          <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-800 underline decoration-violet-600 underline-offset-8 pb-4">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-gray-800 underline decoration-violet-600 underline-offset-8 pb-4">
               Shop by <span className="text-violet-600">Category</span>
             </h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
