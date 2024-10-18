@@ -8,11 +8,14 @@ import glasses from "../../assets/products/glasses.avif";
 import clothes from "../../assets/products/cloths.avif";
 import { Link } from "react-router-dom";
 import useScrollToTop from "../../hooks/userScrollToTop";
+import { addToCart } from "../../redux/slices/cartSlice";
+import { useDispatch } from "react-redux";
 
 function HomePage() {
   useScrollToTop();
   const [products, setProducts] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
+  const dispatch = useDispatch();
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     axios
@@ -20,6 +23,20 @@ function HomePage() {
       .then((response) => setProducts(response.data))
       .catch((error) => console.log(error));
   }, []);
+
+  const handleAddToCart = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(addToCart(product));
+  }
+
+  const handleQuickView = (product) => {
+    setSelectedProduct(product);
+  }
+
+  const closeQuickView = () => {
+    setSelectedProduct(null);
+  }
 
   const categories = [
     {
@@ -44,12 +61,6 @@ function HomePage() {
       link: "/fashion",
     },
   ];
-
-  const addToCart = (product) => {
-    setCartItems((prevItems) => [...prevItems, product]);
-    // In a real app, you'd update your state management solution here
-    // For now, we'll just update the local state
-  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -100,18 +111,24 @@ function HomePage() {
                     key={product.id}
                     className="group bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl flex flex-col"
                   >
-                    <div className="relative p-4 flex-grow flex items-center justify-center">
+                    <Link to={`/product/${product.id}`} className="relative p-4 flex-grow flex items-center justify-center">
                       <img
                         src={product.image}
                         alt={product.title}
                         className="w-full h-full object-contain max-h-48 transition-transform duration-300 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <button className="bg-white text-gray-800 px-4 py-2 rounded-full font-semibold transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        <button 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleQuickView(product);
+                          }}
+                          className="bg-white text-gray-800 px-4 py-2 rounded-full font-semibold transform -translate-y-2 group-hover:translate-y-0 transition-all duration-300"
+                        >
                           Quick View
                         </button>
                       </div>
-                    </div>
+                    </Link>
                     <div className="p-6">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">
                         {product.title}
@@ -137,7 +154,7 @@ function HomePage() {
                           ${product.price.toFixed(2)}
                         </span>
                         <button
-                          onClick={() => addToCart(product)}
+                          onClick={(e) => handleAddToCart(e, product)}
                           className="flex items-center justify-center bg-violet-600 text-white p-2 rounded-full hover:bg-violet-700 transition-colors duration-300"
                         >
                           <CgShoppingCart className="h-6 w-6" />
@@ -220,6 +237,59 @@ function HomePage() {
           </div>
         </section>
       </main>
+      {selectedProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg max-w-2xl w-full">
+            <div className="flex justify-between items-start mb-4">
+              <h2 className="text-2xl font-bold">{selectedProduct.title}</h2>
+              <button onClick={closeQuickView} className="text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-1/2 mb-4 md:mb-0">
+                <img src={selectedProduct.image} alt={selectedProduct.title} className="w-full h-auto object-contain" />
+              </div>
+              <div className="md:w-1/2 md:pl-4">
+                <p className="text-gray-600 mb-4">{selectedProduct.description}</p>
+                <p className="text-2xl font-bold text-violet-600 mb-4">${selectedProduct.price.toFixed(2)}</p>
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <BiStar
+                      key={i}
+                      className={`h-5 w-5 ${
+                        i < Math.floor(selectedProduct.rating.rate)
+                          ? "text-yellow-400"
+                          : "text-gray-300"
+                      }`}
+                      fill="currentColor"
+                    />
+                  ))}
+                  <span className="ml-2 text-sm text-gray-600">
+                    ({selectedProduct.rating.count} reviews)
+                  </span>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleAddToCart(selectedProduct)}
+                    className="bg-violet-600 text-white px-4 py-2 rounded-full hover:bg-violet-700 transition-colors duration-300"
+                  >
+                    Add to Cart
+                  </button>
+                  <Link
+                    to={`/product/${selectedProduct.id}`}
+                    className="bg-gray-200 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-300 transition-colors duration-300"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

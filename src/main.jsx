@@ -19,6 +19,9 @@ import ForgotPassword from "./components/ForgotPassword.jsx";
 import ResetPassword from "./components/ResetPassword.jsx";
 import VerifyOtp from "./components/VerifyOtp.jsx";
 import SingleProductPage from "./components/Product/SingleProductPage.jsx";
+import Cart from "./components/Cart.jsx";
+import { Provider } from "react-redux";
+import store from "./redux/store.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +35,7 @@ const router = createBrowserRouter(
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:id" element={<SingleProductPage />} />
+        <Route path="/cart" element={<Cart />} />
       </Route>
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
@@ -42,6 +46,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );

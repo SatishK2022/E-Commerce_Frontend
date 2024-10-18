@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useScrollToTop from "../../hooks/userScrollToTop";
 import { CgSpinner } from "react-icons/cg";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slices/cartSlice";
 
 function AllProducts() {
   useScrollToTop();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     axios
       .get("https://fakestoreapi.com/products")
       .then((response) => {
@@ -21,6 +25,12 @@ function AllProducts() {
         setLoading(false);
       });
   }, []);
+
+  const handleAddToCart = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(addToCart(product));
+  };
 
   return (
     <div className="container mx-auto min-h-screen py-8 px-4 md:px-6 bg-gray-100">
@@ -37,9 +47,9 @@ function AllProducts() {
             <Link
               to={`/product/${product.id}`}
               key={product.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 flex flex-col h-full"
+              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 flex flex-col h-full"
             >
-              <div className="h-64 p-4 flex items-center justify-center">
+              <div className="h-64 p-4 flex items-center justify-center hover:scale-105 transition-transform duration-300">
                 <img
                   src={product.image}
                   alt={product.title}
@@ -59,7 +69,10 @@ function AllProducts() {
                   <p className="text-2xl font-bold text-violet-600">
                     ${product.price.toFixed(2)}
                   </p>
-                  <button className="bg-violet-600 text-white px-4 py-2 rounded-full hover:bg-violet-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50">
+                  <button 
+                    onClick={(e) => handleAddToCart(e, product)} 
+                    className="bg-violet-600 text-white px-4 py-2 rounded-full hover:bg-violet-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50"
+                  >
                     Add to Cart
                   </button>
                 </div>
