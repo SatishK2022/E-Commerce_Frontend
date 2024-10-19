@@ -5,10 +5,13 @@ import { BiHeart, BiSolidStar, BiMinus, BiPlus } from "react-icons/bi";
 import { CgShoppingCart } from "react-icons/cg";
 import { useParams } from "react-router-dom";
 import useScrollToTop from "../../hooks/userScrollToTop";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slices/cartSlice";
 
 function SingleProductPage() {
   useScrollToTop();
 
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
@@ -39,6 +42,11 @@ function SingleProductPage() {
       </div>
     );
   }
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    dispatch(addToCart({ ...product, quantity }));
+  };
 
   const onSubmit = (data) => {
     console.log("Form submitted:", { ...data, quantity });
@@ -114,7 +122,7 @@ function SingleProductPage() {
             <p className="text-lg text-gray-700 leading-relaxed">
               {product.description}
             </p>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-6">
               <div>
                 <label
                   htmlFor="quantity"
@@ -122,27 +130,23 @@ function SingleProductPage() {
                 >
                   Quantity
                 </label>
-                <div className="flex items-center border-2 border-violet-300 rounded-lg shadow-sm overflow-hidden w-36">
+                <div className="flex items-center border-2 border-violet-300 rounded-lg shadow-md overflow-hidden w-40 bg-white">
                   <button
                     type="button"
                     onClick={() => handleQuantityChange(-1)}
-                    className="p-2 text-violet-600 hover:bg-violet-100 focus:outline-none transition-colors duration-200"
+                    className="p-3 text-violet-600 hover:bg-violet-100 focus:outline-none transition-colors duration-200 active:bg-violet-200"
                   >
                     <BiMinus className="h-5 w-5" />
                   </button>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) =>
-                      setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-                    }
-                    className="w-full text-center border-x-2 border-violet-300 focus:ring-2 focus:ring-violet-500 focus:border-transparent py-2 text-lg font-semibold text-violet-700"
-                    min="1"
-                  />
+                  <div
+                    className="w-full text-center border-x-2 border-violet-300 py-2 text-lg font-semibold text-violet-700"
+                  >
+                    {quantity}
+                  </div>
                   <button
                     type="button"
                     onClick={() => handleQuantityChange(1)}
-                    className="p-2 text-violet-600 hover:bg-violet-100 focus:outline-none transition-colors duration-200"
+                    className="p-3 text-violet-600 hover:bg-violet-100 focus:outline-none transition-colors duration-200 active:bg-violet-200"
                   >
                     <BiPlus className="h-5 w-5" />
                   </button>
@@ -150,7 +154,7 @@ function SingleProductPage() {
               </div>
               <div className="flex space-x-4">
                 <button
-                  type="submit"
+                  onClick={handleAddToCart}
                   className="flex-1 bg-violet-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition duration-150 ease-in-out"
                 >
                   <CgShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
@@ -162,7 +166,7 @@ function SingleProductPage() {
                   <BiHeart className="h-5 w-5" />
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
         <div className="mt-16">

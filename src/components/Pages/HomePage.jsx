@@ -273,7 +273,7 @@ function HomePage() {
                 </div>
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => handleAddToCart(selectedProduct)}
+                    onClick={(e) => handleAddToCart(e, selectedProduct)}
                     className="bg-violet-600 text-white px-4 py-2 rounded-full hover:bg-violet-700 transition-colors duration-300"
                   >
                     Add to Cart

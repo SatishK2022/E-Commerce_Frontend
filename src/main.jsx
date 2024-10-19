@@ -8,18 +8,18 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import HomePage from "./components/Home/HomePage.jsx";
-import Login from "./components/Login.jsx";
-import Register from "./components/Register.jsx";
+import HomePage from "./components/Pages/HomePage.jsx";
+import Login from "./components/Pages/Login.jsx";
+import Register from "./components/Pages/Register.jsx";
 import AllProducts from "./components/Product/AllProducts.jsx";
-import About from "./components/About.jsx";
-import Contact from "./components/Contact.jsx";
-import Categories from "./components/Categories.jsx";
-import ForgotPassword from "./components/ForgotPassword.jsx";
-import ResetPassword from "./components/ResetPassword.jsx";
-import VerifyOtp from "./components/VerifyOtp.jsx";
+import About from "./components/Pages/About.jsx";
+import Contact from "./components/Pages/Contact.jsx";
+import Categories from "./components/Pages/Categories.jsx";
+import ForgotPassword from "./components/Pages/ForgotPassword.jsx";
+import ResetPassword from "./components/Pages/ResetPassword.jsx";
+import VerifyOtp from "./components/Pages/VerifyOtp.jsx";
 import SingleProductPage from "./components/Product/SingleProductPage.jsx";
-import Cart from "./components/Cart.jsx";
+import Cart from "./components/Pages/Cart.jsx";
 import { Provider } from "react-redux";
 import store from "./redux/store.js";
 

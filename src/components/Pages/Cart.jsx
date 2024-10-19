@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart, removeFromCart } from "../redux/slices/cartSlice";
+import { addToCart, removeFromCart } from "../../redux/slices/cartSlice";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -11,16 +11,14 @@ function Cart() {
 
   const updateQuantity = (item, newQuantity) => {
     if (newQuantity > item.quantity) {
-      dispatch(addToCart(item));
+      dispatch(addToCart({ ...item, quantity: newQuantity - item.quantity }));
     } else if (newQuantity < item.quantity) {
-      dispatch(removeFromCart(item));
+      dispatch(removeFromCart({ ...item, quantity: item.quantity - newQuantity }));
     }
   };
 
   const removeItem = (item) => {
-    for (let i = 0; i < item.quantity; i++) {
-      dispatch(removeFromCart(item));
-    }
+    dispatch(removeFromCart({ ...item, quantity: item.quantity }));
   };
 
   const subtotal = totalAmount;
@@ -76,11 +74,13 @@ function Cart() {
                     key={item.id}
                     className="flex items-center border-b py-6 last:border-b-0"
                   >
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-24 h-24 object-contain rounded-md mr-6 bg-gray-100 p-2"
-                    />
+                    <Link to={`/product/${item.id}`}>
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-24 h-24 object-contain rounded-md mr-6 bg-gray-100 p-2 cursor-pointer"
+                      />
+                    </Link>
                     <div className="flex-grow w-1/3">
                       <h3 className="text-lg font-medium text-gray-800 mb-1 truncate">
                         {item.title}
@@ -94,7 +94,7 @@ function Cart() {
                             ? 'bg-gray-100 cursor-not-allowed'
                             : 'bg-violet-100 hover:bg-violet-200'
                         }`}
-                        onClick={() => updateQuantity(item, Math.max(1, item.quantity - 1))}
+                        onClick={() => updateQuantity(item, item.quantity - 1)}
                         aria-label="Decrease quantity"
                         disabled={item.quantity === 1}
                       >
@@ -102,14 +102,11 @@ function Cart() {
                           item.quantity === 1 ? 'text-gray-400' : 'text-violet-600'
                         }`} />
                       </button>
-                      <input
-                        type="text"
-                        value={item.quantity}
-                        onChange={(e) =>
-                          updateQuantity(item, Math.max(1, parseInt(e.target.value) || 1))
-                        }
-                        className="w-10 text-center border rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-violet-500"
-                      />
+                      <div
+                        className="w-10 text-center border border-violet-300 rounded-md p-1 bg-white font-semibold text-violet-700 shadow-sm"
+                      >
+                        {item.quantity}
+                      </div>
                       <button
                         className="p-2 bg-violet-100 rounded-full hover:bg-violet-200 transition duration-300"
                         onClick={() => updateQuantity(item, item.quantity + 1)}

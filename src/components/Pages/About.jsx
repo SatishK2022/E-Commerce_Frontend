@@ -3,10 +3,10 @@ import { BiMapPin, BiPhone } from "react-icons/bi";
 import { BsInstagram, BsMailbox, BsTwitterX } from "react-icons/bs";
 import { FaFacebook } from "react-icons/fa";
 import { LiaLinkedin } from "react-icons/lia";
-import person1 from '../assets/contact/person-1.avif'
-import person2 from '../assets/contact/person-2.avif'
-import person3 from '../assets/contact/person-3.avif'
-import person4 from '../assets/contact/person-4.avif'
+import person1 from '../../assets/contact/person-1.avif'
+import person2 from '../../assets/contact/person-2.avif'
+import person3 from '../../assets/contact/person-3.avif'
+import person4 from '../../assets/contact/person-4.avif'
 
 function About() {
   const teamMembers = [

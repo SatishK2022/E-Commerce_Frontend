@@ -1,14 +1,14 @@
 import React from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import electronics from "../assets/categories/watch.avif";
-import clothes from "../assets/categories/cloths.avif";
-import home from "../assets/categories/home.webp";
-import sports from "../assets/categories/sports.webp";
-import beauty from "../assets/categories/beauty.jpeg";
-import stationery from "../assets/categories/stationary.webp";
-import toys from "../assets/categories/toys.webp";
-import fashion from "../assets/categories/glasses.avif";
+import electronics from "../../assets/categories/watch.avif";
+import clothes from "../../assets/categories/cloths.avif";
+import home from "../../assets/categories/home.webp";
+import sports from "../../assets/categories/sports.webp";
+import beauty from "../../assets/categories/beauty.jpeg";
+import stationery from "../../assets/categories/stationary.webp";
+import toys from "../../assets/categories/toys.webp";
+import fashion from "../../assets/categories/glasses.avif";
 
 function Categories() {
   const categories = [
