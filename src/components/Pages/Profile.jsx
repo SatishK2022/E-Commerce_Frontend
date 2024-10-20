@@ -103,7 +103,7 @@ function Profile() {
                   id="dob"
                   name="dob"
                   {...register("date_of_birth")}
-                  defaultValue={user?.date_of_birth}
+                  defaultValue={user?.date_of_birth ? new Date(new Date(user.date_of_birth).getTime() + 86400000).toISOString().split('T')[0] : ''}
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
                 />
               </div>
