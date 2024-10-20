@@ -33,7 +33,7 @@ function AllProducts() {
   };
 
   return (
-    <div className="container mx-auto min-h-screen py-8 px-4 md:px-6 bg-gray-100">
+    <div className="container mx-auto min-h-screen py-8 px-4 md:px-6">
       <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 underline decoration-violet-600 underline-offset-8 pb-4">
         Our <span className="text-violet-600">Products</span>
       </h1>
@@ -47,7 +47,7 @@ function AllProducts() {
             <Link
               to={`/product/${product.id}`}
               key={product.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 flex flex-col h-full"
+              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 flex flex-col h-full border border-gray-300"
             >
               <div className="h-64 p-4 flex items-center justify-center hover:scale-105 transition-transform duration-300">
                 <img

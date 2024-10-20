@@ -1,13 +1,38 @@
-import React, { useLayoutEffect } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../redux/slices/authSlice";
+import { FaArrowLeft } from "react-icons/fa";
 
 function Login() {
-  useLayoutEffect(() => {
-    document.title = "Login";
-  }, []);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = async (data) => {
+    const response = await dispatch(loginUser(data));
+
+    if (response.payload.success) {
+      navigate("/");
+    }
+  };
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
+      <button
+        onClick={handleGoBack}
+        className="absolute top-8 left-8 flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 bg-white rounded-full shadow-md hover:bg-gray-100 hover:text-violet-600 transition-all duration-300 ease-in-out"
+        aria-label="Go back"
+      >
+        <FaArrowLeft className="h-4 w-4" />
+        <span>Go Back</span>
+      </button>
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg border border-gray-300">
         <div className="text-center">
           <h2 className=" text-3xl font-extrabold text-gray-900">
@@ -23,7 +48,7 @@ function Login() {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div>
               <label
@@ -34,7 +59,7 @@ function Login() {
               </label>
               <input
                 id="email"
-                name="email"
+                {...register("email")}
                 type="email"
                 autoComplete="email"
                 required
@@ -51,7 +76,7 @@ function Login() {
               </label>
               <input
                 id="password"
-                name="password"
+                {...register("password")}
                 type="password"
                 autoComplete="current-password"
                 required

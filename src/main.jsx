@@ -22,24 +22,30 @@ import SingleProductPage from "./components/Product/SingleProductPage.jsx";
 import Cart from "./components/Pages/Cart.jsx";
 import { Provider } from "react-redux";
 import store from "./redux/store.js";
+import NotFound from "./components/Pages/NotFound.jsx";
+import Profile from "./components/Pages/Profile.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
         <Route index element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/products" element={<AllProducts />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:id" element={<SingleProductPage />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="*" element={<NotFound />} />
     </>
   )
 );
@@ -48,6 +54,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
+      <ToastContainer autoClose={2000} />
     </Provider>
   </StrictMode>
 );

@@ -55,14 +55,14 @@ function Categories() {
   ];
 
   return (
-    <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 min-h-screen bg-gray-50">
+    <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 min-h-screen">
       <div className="px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-center mb-12 text-gray-800 underline decoration-violet-600 underline-offset-8 pb-4">
           Our <span className="text-violet-600">Categories</span>
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {categories.map((category) => (
-            <div key={category.slug} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+            <div key={category.slug} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 border border-gray-300">
               <Link to={`/categories/${category.slug}`} className="block">
                 <div className="relative h-56 w-full overflow-hidden">
                   <img

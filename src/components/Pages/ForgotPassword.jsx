@@ -1,27 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useLayoutEffect } from "react";
+import { useForm } from "react-hook-form";
+import { forgotPassword } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
 
-  const handleChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    if (email) {
-      navigate("/verify-otp");
+  const onSubmit = async (data) => {
+    const response = await dispatch(forgotPassword(data));
+    console.log(response);
+    if (response.payload.success) {
+      navigate("/verify-otp", { state: { email: data.email } });
     } else {
-      alert("Please enter your email");
+      toast.error(response.payload.message);
     }
   };
-
-  useLayoutEffect(() => {
-    document.title = "Forgot Password";
-  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-500 to-purple-600 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
@@ -34,7 +30,7 @@ const ForgotPassword = () => {
             No worries, we'll send you reset instructions.
           </p>
         </div>
-        <form className="mt-8 space-y-6">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
               htmlFor="email"
@@ -44,11 +40,8 @@ const ForgotPassword = () => {
             </label>
             <input
               id="email"
-              name="email"
+              {...register("email")}
               type="email"
-              autoComplete="email"
-              value={email}
-              onChange={handleChange}
               required
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
               placeholder="Enter your email"

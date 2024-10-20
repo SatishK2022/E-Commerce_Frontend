@@ -1,28 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { BiMenu, BiSearch } from "react-icons/bi";
+import React, { useState, useEffect, useRef } from "react";
+import { BiMenu, BiSearch, BiSolidUser, BiUser } from "react-icons/bi";
 import { CgShoppingCart } from "react-icons/cg";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.jpg";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/slices/authSlice";
 
 function Header() {
   const location = useLocation();
+  const dispatch = useDispatch();
   const [activeLink, setActiveLink] = useState(location.pathname);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const profileRef = useRef(null);
 
   useEffect(() => {
     setActiveLink(location.pathname);
-    const fetchCartItemsCount = () => {
-      setTimeout(() => {
-        setCartItemsCount(3);
-      }, 1000);
-    };
-
-    fetchCartItemsCount();
   }, [location]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setShowProfileModal(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileRef]);
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const user = useSelector((state) => state.auth.user);
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+  const handleLogout = () => {
+    dispatch(logout());
+    setShowProfileModal(false);
+  };
 
   const navLinks = [
     {
@@ -94,16 +111,56 @@ function Header() {
               <span className="sr-only">Cart</span>
             </button>
           </Link>
-          <Link to="/login">
-            <button className="bg-violet-600 text-white px-4 py-2 rounded-md border-2 border-violet-600 hover:bg-violet-800 transition-all duration-300 ease-in font-semibold">
-              Login
-            </button>
-          </Link>
-          <Link to="/register">
-            <button className=" hover:text-white px-4 py-2 border-2 border-violet-600 rounded-md hover:bg-violet-800 transition-all duration-300 ease-in font-semibold">
-              Register
-            </button>
-          </Link>
+          {isLoggedIn ? (
+            <div className="relative" ref={profileRef}>
+              <button
+                onClick={() => setShowProfileModal(!showProfileModal)}
+                className="w-10 h-10 rounded-full overflow-hidden border-2 border-violet-600 hover:border-violet-800 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2"
+              >
+                {user && user.profileImage ? (
+                  <img 
+                    src={user.profileImage} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-violet-100 flex items-center justify-center">
+                    <BiSolidUser className="w-6 h-6 text-violet-600" />
+                  </div>
+                )}
+              </button>
+              {showProfileModal && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10 border border-gray-300">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-violet-100"
+                    onClick={() => setShowProfileModal(false)}
+                  >
+                    View Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-violet-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link to="/login">
+                <button className="bg-violet-600 text-white px-4 py-2 rounded-md border-2 border-violet-600 hover:bg-violet-800 transition-all duration-300 ease-in font-semibold">
+                  Login
+                </button>
+              </Link>
+              <Link to="/register">
+                <button className="hover:text-white px-4 py-2 border-2 border-violet-600 rounded-md hover:bg-violet-800 transition-all duration-300 ease-in font-semibold">
+                  Register
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

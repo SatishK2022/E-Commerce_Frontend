@@ -33,7 +33,7 @@ function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 underline decoration-violet-600 underline-offset-8 pb-4">
@@ -63,21 +63,21 @@ function About() {
               Our Values
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="bg-white rounded-lg shadow-md p-6 border border-gray-300">
                 <h3 className="text-xl font-semibold mb-2">Quality</h3>
                 <p className="text-gray-700">
                   We are committed to offering only the highest quality products
                   to our customers.
                 </p>
               </div>
-              <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="bg-white rounded-lg shadow-md p-6 border border-gray-300">
                 <h3 className="text-xl font-semibold mb-2">Sustainability</h3>
                 <p className="text-gray-700">
                   We strive to minimize our environmental impact through
                   eco-friendly practices.
                 </p>
               </div>
-              <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="bg-white rounded-lg shadow-md p-6 border border-gray-300">
                 <h3 className="text-xl font-semibold mb-2">Customer First</h3>
                 <p className="text-gray-700">
                   Our customers are at the heart of everything we do. Your
@@ -93,7 +93,7 @@ function About() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {teamMembers.map((member, index) => (
-                <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="bg-white rounded-lg shadow-md p-6 border border-gray-300">
                   <img
                     src={member.image}
                     alt={member.name}

@@ -1,26 +1,36 @@
-import React, { useLayoutEffect, useState } from "react";
-import { LuCheckCircle2 } from "react-icons/lu";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { verifyOTP, forgotPassword } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const VerifyOtp = () => {
-  const [isVerified, setIsVerified] = useState(false);
-  const [otp, setOtp] = useState("");
+  const { register, handleSubmit } = useForm();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useLayoutEffect(() => {
-    document.title = "Verify OTP";
-  }, []);
+  const { email } = useLocation()?.state;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsVerified(true);
+  const onSubmit = async (data) => {
+    const { otp } = data;
+    const submitData = {
+      otp,
+      email,
+    };
 
-    navigate("/reset-password");
+    const response = await dispatch(verifyOTP(submitData));
+    console.log(response);
+    if (response.payload.success) {
+      navigate("/reset-password", { state: { email } });
+    } else {
+      toast.error(response.payload.message);
+    }
   };
 
   const handleResendOtp = () => {
-    console.log("Resending OTP...");
+    dispatch(forgotPassword(email));
   };
 
   return (
@@ -35,47 +45,30 @@ const VerifyOtp = () => {
           </p>
         </div>
         <div className="space-y-6">
-          {isVerified ? (
-            <div
-              className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <div className="flex items-center">
-                <LuCheckCircle2 className="h-5 w-5 mr-2" />
-                <strong className="font-bold">OTP Verified!</strong>
-              </div>
-              <span className="block sm:inline mt-1">
-                Your OTP has been verified. You can now reset your password.
-              </span>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="otp"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  One-Time Password (OTP)
-                </label>
-                <input
-                  id="otp"
-                  name="otp"
-                  type="text"
-                  required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="Enter 6-digit OTP"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-violet-600 text-white py-3 rounded-md font-bold text-sm uppercase tracking-wide hover:bg-violet-700 transition-all duration-300 ease-in-out"
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <label
+                htmlFor="otp"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Verify OTP
-              </button>
-            </form>
-          )}
+                One-Time Password (OTP)
+              </label>
+              <input
+                id="otp"
+                {...register("otp")}
+                type="text"
+                required
+                placeholder="Enter 6-digit OTP"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-violet-600 text-white py-3 rounded-md font-bold text-sm uppercase tracking-wide hover:bg-violet-700 transition-all duration-300 ease-in-out"
+            >
+              Verify OTP
+            </button>
+          </form>
         </div>
         <div className="mt-6 flex justify-between items-center">
           <button
