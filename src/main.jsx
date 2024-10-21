@@ -20,12 +20,15 @@ import ResetPassword from "./components/Pages/ResetPassword.jsx";
 import VerifyOtp from "./components/Pages/VerifyOtp.jsx";
 import SingleProductPage from "./components/Product/SingleProductPage.jsx";
 import Cart from "./components/Pages/Cart.jsx";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "./redux/store.js";
 import NotFound from "./components/Pages/NotFound.jsx";
 import Profile from "./components/Pages/Profile.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import RequireAuth from "./components/Auth/RequireAuth.jsx";
+
+const isLoggedIn = JSON.parse(localStorage.getItem('auth'))?.isLoggedIn || false;
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,13 +41,24 @@ const router = createBrowserRouter(
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:id" element={<SingleProductPage />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          }
+        />
       </Route>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/verify-otp" element={<VerifyOtp />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+      {!isLoggedIn && (
+        <>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </>
+      )}
       <Route path="*" element={<NotFound />} />
     </>
   )

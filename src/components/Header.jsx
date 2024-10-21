@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BiMenu, BiSearch, BiSolidUser, BiUser } from "react-icons/bi";
+import { BiMenu, BiSearch, BiSolidUser, BiUser, BiX } from "react-icons/bi";
 import { CgShoppingCart } from "react-icons/cg";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.jpg";
+import logo2 from "../assets/logo-small.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 
@@ -11,7 +12,9 @@ function Header() {
   const dispatch = useDispatch();
   const [activeLink, setActiveLink] = useState(location.pathname);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
   const profileRef = useRef(null);
+  const sidebarRef = useRef(null);
 
   useEffect(() => {
     setActiveLink(location.pathname);
@@ -22,13 +25,16 @@ function Header() {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setShowProfileModal(false);
       }
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target) && showSidebar) {
+        setShowSidebar(false);
+      }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [profileRef]);
+  }, [profileRef, sidebarRef, showSidebar]);
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const user = useSelector((state) => state.auth.user);
@@ -42,6 +48,10 @@ function Header() {
   };
 
   const navLinks = [
+    {
+      name: "Home",
+      path: "/",
+    },
     {
       name: "Products",
       path: "/products",
@@ -62,48 +72,53 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b px-4 mx-auto md:px-6 py-2 bg-white">
-      <div className="container flex h-14 items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link className="mr-10 flex items-center space-x-2" to="/">
-            <span className="hidden font-bold sm:inline-block ">
-              <img src={logo} alt="logo" className="w-full h-12" />
+      <div className="container mx-auto flex h-14 items-center justify-between">
+        <div className="flex items-center">
+          <Link className="mr-4 flex items-center space-x-2" to="/">
+            <span className="font-bold">
+              <img src={logo} alt="logo" className="hidden sm:block w-full h-12 object-contain" />
+              <img src={logo2} alt="logo" className="block sm:hidden w-full h-8 object-contain" />
             </span>
           </Link>
-          <nav className="flex items-center space-x-6 text-sm font-semibold">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`hover:text-violet-600 hover:border-b-2 hover:border-violet-600 transition-all duration-100 ease-in-out ${
-                  activeLink === link.path
-                    ? "text-violet-600 border-b-2 border-violet-600"
-                    : ""
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
+          <button 
+            className="md:hidden p-2 rounded-full transition-colors duration-300 hover:bg-violet-100 focus:outline-none focus:ring-2 focus:ring-violet-600"
+            onClick={() => setShowSidebar(!showSidebar)}
+            aria-label="Toggle menu"
+          >
+            <BiMenu className="h-6 w-6 text-gray-600 hover:text-violet-600" />
+          </button>
         </div>
-        <button className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none ring-offset-background hover:bg-accent hover:text-accent-foreground h-10 py-2 mr-2 px-0 text-base hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden">
-          <BiMenu className="h-6 w-6" />
-          <span className="sr-only">Toggle Menu</span>
-        </button>
-        <div className="flex flex-1 items-center justify-between space-x-5 md:justify-end">
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-            <div className="relative flex items-center justify-center">
-              <BiSearch className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-              <input
-                type="search"
-                placeholder="Search products..."
-                className="pl-10 sm:w-[300px] md:w-[200px] lg:w-[300px] py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
-              />
-            </div>
+        
+        <nav className="hidden md:flex items-center space-x-6 text-sm font-semibold">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              className={`hover:text-violet-600 hover:border-b-2 hover:border-violet-600 transition-all duration-100 ease-in-out ${
+                activeLink === link.path
+                  ? "text-violet-600 border-b-2 border-violet-600"
+                  : ""
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
+        
+        <div className="flex items-center space-x-4">
+          <div className="hidden lg:flex relative">
+            <BiSearch className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+            <input
+              type="search"
+              placeholder="Search products..."
+              className="pl-10 w-[200px] py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
+            />
           </div>
+          
           <Link to="/cart" className="relative group">
-            <button size="icon" variant="ghost" className="relative p-2 rounded-full transition-colors duration-300 hover:bg-violet-100">
+            <button className="relative p-2 rounded-full transition-colors duration-300 hover:bg-violet-100">
               <CgShoppingCart className="h-6 w-6 text-gray-600 group-hover:text-violet-600" />
-              {cartItemsCount > 0 && (
+              {cartItemsCount >= 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110">
                   {cartItemsCount}
                 </span>
@@ -111,6 +126,7 @@ function Header() {
               <span className="sr-only">Cart</span>
             </button>
           </Link>
+          
           {isLoggedIn ? (
             <div className="relative" ref={profileRef}>
               <button
@@ -148,7 +164,7 @@ function Header() {
               )}
             </div>
           ) : (
-            <>
+            <div className="hidden md:flex space-x-2">
               <Link to="/login">
                 <button className="bg-violet-600 text-white px-4 py-2 rounded-md border-2 border-violet-600 hover:bg-violet-800 transition-all duration-300 ease-in font-semibold">
                   Login
@@ -159,7 +175,54 @@ function Header() {
                   Register
                 </button>
               </Link>
-            </>
+            </div>
+          )}
+        </div>
+      </div>
+      {/* Sidebar */}
+      <div 
+        ref={sidebarRef}
+        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform ${
+          showSidebar ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out z-50`}
+      >
+        <div className="p-4">
+          <button 
+            onClick={() => setShowSidebar(false)}
+            className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+          >
+            <BiX className="h-6 w-6" />
+          </button>
+          <Link to="/" className="flex items-center mb-8" onClick={() => setShowSidebar(false)}>
+            <img src={logo} alt="logo" className="w-full h-12 object-contain" />
+          </Link>
+          <nav className="flex flex-col space-y-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`text-gray-700 hover:text-violet-600 transition-all duration-100 ease-in-out ${
+                  activeLink === link.path ? "text-violet-600 font-semibold" : ""
+                }`}
+                onClick={() => setShowSidebar(false)}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+          {!isLoggedIn && (
+            <div className="mt-8 space-y-2 flex flex-col gap-2">
+              <Link to="/login" onClick={() => setShowSidebar(false)}>
+                <button className="w-full bg-violet-600 text-white px-4 py-2 rounded-md border-2 border-violet-600 hover:bg-violet-800 transition-all duration-300 ease-in font-semibold">
+                  Login
+                </button>
+              </Link>
+              <Link to="/register" onClick={() => setShowSidebar(false)}>
+                <button className="w-full hover:text-white px-4 py-2 border-2 border-violet-600 rounded-md hover:bg-violet-800 transition-all duration-300 ease-in font-semibold">
+                  Register
+                </button>
+              </Link>
+            </div>
           )}
         </div>
       </div>

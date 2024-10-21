@@ -60,81 +60,87 @@ function Cart() {
               Your <span className="text-violet-600">Shopping Cart</span>
             </h1>
             <div className="flex flex-col lg:flex-row gap-8">
-              <div className="lg:w-2/3">
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                  <h2 className="text-2xl font-semibold mb-6 text-gray-700 border-b pb-4">
+              <div className="lg:w-2/3 w-full">
+                <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gray-700 border-b pb-4">
                     Cart Items
                   </h2>
                   {cartItems.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center border-b py-6 last:border-b-0"
+                      className="flex flex-wrap items-center border-b py-4 sm:py-6 last:border-b-0"
                     >
-                      <Link to={`/product/${item.id}`}>
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="w-24 h-24 object-contain rounded-md mr-6 bg-gray-100 p-2 cursor-pointer"
-                        />
-                      </Link>
-                      <div className="flex-grow w-1/3">
-                        <h3 className="text-lg font-medium text-gray-800 mb-1 truncate">
-                          {item.title}
-                        </h3>
-                        <p className="text-violet-600 font-semibold">
-                          ${item.price?.toFixed(2)}
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-2 ml-10 w-1/4">
-                        <button
-                          className={`p-2 rounded-full transition duration-300 ${
-                            item.quantity === 1
-                              ? "bg-gray-100 cursor-not-allowed"
-                              : "bg-violet-100 hover:bg-violet-200"
-                          }`}
-                          onClick={() =>
-                            updateQuantity(item, item.quantity - 1)
-                          }
-                          aria-label="Decrease quantity"
-                          disabled={item.quantity === 1}
-                        >
-                          <FaMinus
-                            className={`h-3 w-3 ${
-                              item.quantity === 1
-                                ? "text-gray-400"
-                                : "text-violet-600"
-                            }`}
+                      <div className="w-1/3 pr-4">
+                        <Link to={`/product/${item.id}`}>
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full md:h-24 object-contain rounded-md bg-gray-100 p-2 cursor-pointer"
                           />
-                        </button>
-                        <div className="w-10 text-center border border-violet-300 rounded-md p-1 bg-white font-semibold text-violet-700 shadow-sm">
-                          {item.quantity}
-                        </div>
-                        <button
-                          className="p-2 bg-violet-100 rounded-full hover:bg-violet-200 transition duration-300"
-                          onClick={() =>
-                            updateQuantity(item, item.quantity + 1)
-                          }
-                          aria-label="Increase quantity"
-                        >
-                          <FaPlus className="h-3 w-3 text-violet-600" />
-                        </button>
+                        </Link>
                       </div>
-                      <p className="font-medium text-gray-800 ml-6 w-1/6 text-right">
-                        ${(item.price * item.quantity).toFixed(2)}
-                      </p>
-                      <button
-                        className="ml-6 p-2 text-red-500 hover:text-red-700 transition duration-300 w-1/12 transform hover:scale-110"
-                        onClick={() =>
-                          setShowConfirmModal({ show: true, item })
-                        }
-                        aria-label={`Remove ${item.title} from cart`}
-                      >
-                        <FaTrash className="h-5 w-5" />
-                      </button>
+                      <div className="w-2/3 flex flex-wrap">
+                        <div className="w-full sm:w-1/2 mb-2 sm:mb-0">
+                          <h3 className="text-lg font-medium text-gray-800 mb-1 truncate">
+                            {item.title}
+                          </h3>
+                          <p className="text-violet-600 font-semibold">
+                            ${item.price?.toFixed(2)}
+                          </p>
+                          <div className="flex items-center space-x-2 mt-2">
+                            <button
+                              className={`p-2 rounded-full transition duration-300 ${
+                                item.quantity === 1
+                                  ? "bg-gray-100 cursor-not-allowed"
+                                  : "bg-violet-100 hover:bg-violet-200"
+                              }`}
+                              onClick={() =>
+                                updateQuantity(item, item.quantity - 1)
+                              }
+                              aria-label="Decrease quantity"
+                              disabled={item.quantity === 1}
+                            >
+                              <FaMinus
+                                className={`h-3 w-3 ${
+                                  item.quantity === 1
+                                    ? "text-gray-400"
+                                    : "text-violet-600"
+                                }`}
+                              />
+                            </button>
+                            <div className="w-10 text-center border border-violet-300 rounded-md p-1 bg-white font-semibold text-violet-700 shadow-sm">
+                              {item.quantity}
+                            </div>
+                            <button
+                              className="p-2 bg-violet-100 rounded-full hover:bg-violet-200 transition duration-300"
+                              onClick={() =>
+                                updateQuantity(item, item.quantity + 1)
+                              }
+                              aria-label="Increase quantity"
+                            >
+                              <FaPlus className="h-3 w-3 text-violet-600" />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="w-full sm:w-1/2 flex flex-col items-end justify-between">
+                          <p className="font-medium text-gray-800 mb-2">
+                            ${(item.price * item.quantity).toFixed(2)}
+                          </p>
+                          <button
+                            className="p-2 text-red-500 hover:text-red-700 transition duration-300 transform hover:scale-110"
+                            onClick={() =>
+                              setShowConfirmModal({ show: true, item })
+                            }
+                            aria-label={`Remove ${item.title} from cart`}
+                          >
+                            <FaTrash className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </div>
                       {showConfirmModal.show &&
                         showConfirmModal.item.id === item.id && (
-                          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
-                            <div className="bg-white p-6 rounded-lg shadow-xl animate-scaleIn">
+                          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn p-4">
+                            <div className="bg-white p-6 rounded-lg shadow-xl animate-scaleIn w-full max-w-sm">
                               <h3 className="text-lg font-semibold mb-4">
                                 Confirm Removal
                               </h3>
