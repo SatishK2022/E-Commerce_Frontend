@@ -40,8 +40,8 @@ function AdminDashboard() {
     { icon: FiGrid, label: "Dashboard", path: "/" },
     { icon: FiShoppingCart, label: "Orders", path: "/orders" },
     { icon: BsBoxSeam, label: "Products", path: "/products" },
-    { icon: TbUsersGroup, label: "Customers", path: "/customers" },
-    { icon: HiOutlineCog6Tooth, label: "Settings", path: "/settings" },
+    // { icon: TbUsersGroup, label: "Customers", path: "/customers" },
+    // { icon: HiOutlineCog6Tooth, label: "Settings", path: "/settings" },
   ];
 
   return (
