@@ -25,7 +25,11 @@ function Header() {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setShowProfileModal(false);
       }
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target) && showSidebar) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        showSidebar
+      ) {
         setShowSidebar(false);
       }
     }
@@ -40,7 +44,10 @@ function Header() {
   const user = useSelector((state) => state.auth.user);
 
   const cartItems = useSelector((state) => state.cart.cartItems);
-  const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const cartItemsCount = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   const handleLogout = () => {
     dispatch(logout());
@@ -76,11 +83,19 @@ function Header() {
         <div className="flex items-center">
           <Link className="mr-4 flex items-center space-x-2" to="/">
             <span className="font-bold">
-              <img src={logo} alt="logo" className="hidden sm:block w-full h-12 object-contain" />
-              <img src={logo2} alt="logo" className="block sm:hidden w-full h-8 object-contain" />
+              <img
+                src={logo}
+                alt="logo"
+                className="hidden sm:block w-full h-12 object-contain"
+              />
+              <img
+                src={logo2}
+                alt="logo"
+                className="block sm:hidden w-full h-8 object-contain"
+              />
             </span>
           </Link>
-          <button 
+          <button
             className="md:hidden p-2 rounded-full transition-colors duration-300 hover:bg-violet-100 focus:outline-none focus:ring-2 focus:ring-violet-600"
             onClick={() => setShowSidebar(!showSidebar)}
             aria-label="Toggle menu"
@@ -88,7 +103,7 @@ function Header() {
             <BiMenu className="h-6 w-6 text-gray-600 hover:text-violet-600" />
           </button>
         </div>
-        
+
         <nav className="hidden md:flex items-center space-x-6 text-sm font-semibold">
           {navLinks.map((link) => (
             <Link
@@ -104,17 +119,8 @@ function Header() {
             </Link>
           ))}
         </nav>
-        
+
         <div className="flex items-center space-x-4">
-          <div className="hidden lg:flex relative">
-            <BiSearch className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-            <input
-              type="search"
-              placeholder="Search products..."
-              className="pl-10 w-[200px] py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-600"
-            />
-          </div>
-          
           <Link to="/cart" className="relative group">
             <button className="relative p-2 rounded-full transition-colors duration-300 hover:bg-violet-100">
               <CgShoppingCart className="h-6 w-6 text-gray-600 group-hover:text-violet-600" />
@@ -126,7 +132,7 @@ function Header() {
               <span className="sr-only">Cart</span>
             </button>
           </Link>
-          
+
           {isLoggedIn ? (
             <div className="relative" ref={profileRef}>
               <button
@@ -134,9 +140,9 @@ function Header() {
                 className="w-10 h-10 rounded-full overflow-hidden border-2 border-violet-600 hover:border-violet-800 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2"
               >
                 {user && user.profileImage ? (
-                  <img 
-                    src={user.profileImage} 
-                    alt="Profile" 
+                  <img
+                    src={user.profileImage}
+                    alt="Profile"
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -180,20 +186,24 @@ function Header() {
         </div>
       </div>
       {/* Sidebar */}
-      <div 
+      <div
         ref={sidebarRef}
         className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform ${
           showSidebar ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out z-50`}
       >
         <div className="p-4">
-          <button 
+          <button
             onClick={() => setShowSidebar(false)}
             className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
           >
             <BiX className="h-6 w-6" />
           </button>
-          <Link to="/" className="flex items-center mb-8" onClick={() => setShowSidebar(false)}>
+          <Link
+            to="/"
+            className="flex items-center mb-8"
+            onClick={() => setShowSidebar(false)}
+          >
             <img src={logo} alt="logo" className="w-full h-12 object-contain" />
           </Link>
           <nav className="flex flex-col space-y-4">
@@ -202,7 +212,9 @@ function Header() {
                 key={link.name}
                 to={link.path}
                 className={`text-gray-700 hover:text-violet-600 transition-all duration-100 ease-in-out ${
-                  activeLink === link.path ? "text-violet-600 font-semibold" : ""
+                  activeLink === link.path
+                    ? "text-violet-600 font-semibold"
+                    : ""
                 }`}
                 onClick={() => setShowSidebar(false)}
               >

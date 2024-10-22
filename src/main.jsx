@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -27,47 +27,82 @@ import Profile from "./components/Pages/Profile.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import RequireAuth from "./components/Auth/RequireAuth.jsx";
+import AdminDashboard from "./components/Dashboard/AdminDashboard.jsx";
+import Dashboard from "./components/Dashboard/Dashboard.jsx";
+import Products from "./components/Dashboard/Products.jsx";
+import Orders from "./components/Dashboard/Orders.jsx";
 
-const isLoggedIn = JSON.parse(localStorage.getItem('auth'))?.isLoggedIn || false;
+const RouterWrapper = () => {
+  const auth = useSelector((state) => state.auth);
+  const isLoggedIn = auth.isLoggedIn;
+  const role = auth.role;
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route path="/" element={<App />}>
-        <Route index element={<HomePage />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/products" element={<AllProducts />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/product/:id" element={<SingleProductPage />} />
-        <Route path="/cart" element={<Cart />} />
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
         <Route
-          path="/profile"
-          element={
-            <RequireAuth>
-              <Profile />
-            </RequireAuth>
-          }
-        />
-      </Route>
-      {!isLoggedIn && (
-        <>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/verify-otp" element={<VerifyOtp />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-        </>
-      )}
-      <Route path="*" element={<NotFound />} />
-    </>
-  )
-);
+          path="/"
+          element={role === "admin" ? <AdminDashboard /> : <App />}
+        >
+          {role === "admin" ? (
+            <>
+              {isLoggedIn && (
+                <>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="products" element={<Products />} />
+                  <Route path="orders" element={<Orders />} />
+                  <Route
+                    path="profile"
+                    element={
+                      <RequireAuth>
+                        <Profile />
+                      </RequireAuth>
+                    }
+                  />
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <Route index element={<HomePage />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="products" element={<AllProducts />} />
+              <Route path="about" element={<About />} />
+              <Route path="contact" element={<Contact />} />
+              <Route path="product/:id" element={<SingleProductPage />} />
+              <Route path="cart" element={<Cart />} />
+              <Route
+                path="profile"
+                element={
+                  <RequireAuth>
+                    <Profile />
+                  </RequireAuth>
+                }
+              />
+            </>
+          )}
+        </Route>
+        {!isLoggedIn && (
+          <>
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="verify-otp" element={<VerifyOtp />} />
+            <Route path="reset-password" element={<ResetPassword />} />
+          </>
+        )}
+        <Route path="*" element={<NotFound />} />
+      </>
+    )
+  );
+
+  return <RouterProvider router={router} />;
+};
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <RouterWrapper />
       <ToastContainer autoClose={2000} />
     </Provider>
   </StrictMode>
