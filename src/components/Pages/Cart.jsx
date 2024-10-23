@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart, removeFromCart } from "../../redux/slices/cartSlice";
+import { addToCart, clearCart, removeFromCart } from "../../redux/slices/cartSlice";
 import { FaPlus, FaMinus, FaTrash, FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createOrder } from "../../redux/slices/orderSlice";
 
 function Cart() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { cartItems, totalAmount } = useSelector((state) => state.cart);
   const [showConfirmModal, setShowConfirmModal] = useState({
@@ -22,6 +24,19 @@ function Cart() {
       );
     }
   };
+
+  const handleCheckout = async () => {
+    const response = await dispatch(createOrder({total_price: totalAmount, order_items: cartItems}));
+
+    console.log("response cart", response);
+
+    if (response.payload.success) {
+      navigate(`/checkout/success`);
+      await dispatch(clearCart());
+    } else {
+      navigate(`/checkout/failed`);
+    }
+  }
 
   const removeItem = (item) => {
     dispatch(removeFromCart({ ...item, quantity: item.quantity }));
@@ -200,7 +215,7 @@ function Cart() {
                       <span>${parseFloat(total).toFixed(2)}</span>
                     </div>
                   </div>
-                  <button className="w-full bg-violet-600 text-white py-3 px-4 rounded-lg mt-6 hover:bg-violet-700 transition duration-300 font-medium">
+                  <button onClick={handleCheckout} className="w-full bg-violet-600 text-white py-3 px-4 rounded-lg mt-6 hover:bg-violet-700 transition duration-300 font-medium">
                     Proceed to Checkout
                   </button>
                 </div>

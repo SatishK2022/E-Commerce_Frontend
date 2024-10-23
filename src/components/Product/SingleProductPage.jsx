@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { BiHeart, BiSolidStar, BiMinus, BiPlus } from "react-icons/bi";
+import { BiHeart, BiMinus, BiPlus } from "react-icons/bi";
 import { CgShoppingCart } from "react-icons/cg";
 import { useParams } from "react-router-dom";
 import useScrollToTop from "../../hooks/userScrollToTop";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
+import { getSingleProduct } from "../../redux/slices/productSlice";
 
 function SingleProductPage() {
   useScrollToTop();
@@ -25,15 +26,14 @@ function SingleProductPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    axios
-      .get(`https://fakestoreapi.com/products/${id}`)
-      .then((response) => {
-        setProduct(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching product:", error);
-      });
+    getProductDetails();
   }, [id]);
+
+  const getProductDetails = async () => {
+    const response = await dispatch(getSingleProduct(id));
+    setProduct(response.payload.data[0]);
+    console.log("response", response.payload.data[0]);
+  }
 
   if (!product) {
     return (
@@ -72,8 +72,8 @@ function SingleProductPage() {
           <div className="space-y-8">
             <div className="aspect-w-1 aspect-h-1 bg-white rounded-lg overflow-hidden shadow-lg">
               <img
-                src={additionalImages[activeImage]}
-                alt={product.title}
+                src={product?.image}
+                alt={product.name}
                 className="w-full h-96 object-contain object-center p-4"
               />
             </div>
@@ -87,8 +87,8 @@ function SingleProductPage() {
                   }`}
                 >
                   <img
-                    src={image}
-                    alt={`${product.title} - view ${index + 1}`}
+                    src={product.image}
+                    alt={`${product.name} - view ${index + 1}`}
                     className="w-full h-full object-contain object-center p-2"
                   />
                 </button>
@@ -97,30 +97,13 @@ function SingleProductPage() {
           </div>
           <div className="space-y-6">
             <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-              {product.title}
+              {product.name}
             </h1>
-            <div className="flex items-center">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <BiSolidStar
-                    key={i}
-                    className={`h-6 w-6 ${
-                      i < Math.floor(product.rating.rate)
-                        ? "text-yellow-400"
-                        : "text-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="ml-3 text-sm font-medium text-violet-600">
-                {product.rating.rate} ({product.rating.count} reviews)
-              </span>
-            </div>
             <p className="text-4xl font-bold text-violet-600">
-              ${product.price.toFixed(2)}
+              ${product?.price?.toFixed(2)}
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
-              {product.description}
+              {product?.description}
             </p>
             <div className="space-y-6">
               <div>
@@ -188,10 +171,10 @@ function SingleProductPage() {
             </nav>
           </div>
           <div className="mt-8 prose prose-violet max-w-none">
-            {activeTab === "description" && <p>{product.description}</p>}
+            {activeTab === "description" && <p>{product?.description}</p>}
             {activeTab === "specifications" && (
               <ul className="list-disc pl-5">
-                <li>Category: {product.category}</li>
+                <li>Category: {product?.category}</li>
                 <li>Material: Premium quality materials</li>
                 <li>Care Instructions: Follow label instructions</li>
                 <li>Origin: Imported</li>

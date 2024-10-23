@@ -31,6 +31,9 @@ import AdminDashboard from "./components/Dashboard/AdminDashboard.jsx";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
 import Products from "./components/Dashboard/Products.jsx";
 import Orders from "./components/Dashboard/Orders.jsx";
+import CheckoutSuccess from "./components/Pages/CheckoutSuccess.jsx";
+import CheckoutFailed from "./components/Pages/CheckoutFailed.jsx";
+import MyOrders from "./components/Pages/MyOrders.jsx";
 
 const RouterWrapper = () => {
   const auth = useSelector((state) => state.auth);
@@ -79,9 +82,12 @@ const RouterWrapper = () => {
                   </RequireAuth>
                 }
               />
+              <Route path="orders" element={<MyOrders />} />
             </>
           )}
         </Route>
+        <Route path="checkout/success" element={<CheckoutSuccess />} />
+        <Route path="checkout/failed" element={<CheckoutFailed />} />
         {!isLoggedIn && (
           <>
             <Route path="login" element={<Login />} />

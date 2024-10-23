@@ -68,14 +68,23 @@ function Header() {
       path: "/categories",
     },
     {
-      name: "About",
-      path: "/about",
-    },
-    {
-      name: "Contact",
-      path: "/contact",
+      name: "My Orders",
+      path: "/orders",
     },
   ];
+
+  if (!isLoggedIn) {
+    navLinks.push(
+      {
+        name: "About",
+        path: "/about",
+      },
+      {
+        name: "Contact",
+        path: "/contact",
+      }
+    );
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b px-4 mx-auto md:px-6 py-2 bg-white">

@@ -1,11 +1,11 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useScrollToTop from "../../hooks/userScrollToTop";
 import { CgSpinner } from "react-icons/cg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { FaSearch, FaChevronDown } from "react-icons/fa";
+import { getProducts } from "../../redux/slices/productSlice";
 
 function AllProducts() {
   useScrollToTop();
@@ -15,23 +15,27 @@ function AllProducts() {
   const [sortBy, setSortBy] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const dispatch = useDispatch();
+  // const products = useSelector((state) => state.product.products);
 
   useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((response) => {
-        setProducts(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-        setLoading(false);
-      });
-  }, []);
+    getAllProducts();
+  }, [dispatch]);
+
+  const getAllProducts = async () => {
+    try {
+      const response = await dispatch(getProducts());
+      setProducts(response.payload.data);
+      console.log("response", response.payload.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setLoading(false);
+    }
+  }
 
   const filteredProducts = products
     .filter((product) => 
-      product.title.toLowerCase().includes(searchTerm.toLowerCase())
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
       if (sortBy === "price-asc") return a.price - b.price;
@@ -43,7 +47,7 @@ function AllProducts() {
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(addToCart(product));
+    dispatch(addToCart({ ...product, quantity: 1 }));
   };
 
   return (
@@ -102,14 +106,14 @@ function AllProducts() {
               <div className="h-48 sm:h-56 p-4 flex items-center justify-center">
                 <img
                   src={product.image}
-                  alt={product.title}
+                  alt={product.name}
                   className="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-105"
                 />
               </div>
               <div className="p-4 sm:p-6 flex-grow flex flex-col justify-between">
                 <div>
                   <h2 className="text-lg sm:text-xl font-semibold mb-2 text-gray-800 truncate">
-                    {product.title}
+                    {product.name}
                   </h2>
                   <p className="text-sm text-gray-600 mb-4 line-clamp-2 sm:line-clamp-3">
                     {product.description}

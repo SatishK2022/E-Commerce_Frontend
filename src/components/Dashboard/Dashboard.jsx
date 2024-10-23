@@ -1,43 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getOrders } from "../../redux/slices/dashboardSlice";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
-  const orders = [
-    {
-      id: "#3210",
-      status: "Shipped",
-      customer: "Olivia Martin",
-      product: "Clck Watch Pro",
-      amount: "$79.00",
-    },
-    {
-      id: "#3209",
-      status: "Processing",
-      customer: "Ava Johnson",
-      product: "Clck Fitness Band",
-      amount: "$39.00",
-    },
-    {
-      id: "#3208",
-      status: "Cancelled",
-      customer: "Michael Johnson",
-      product: "Clck Smart Home Hub",
-      amount: "$129.00",
-    },
-    {
-      id: "#3207",
-      status: "Shipped",
-      customer: "Sarah Brown",
-      product: "Clck Wireless Earbuds",
-      amount: "$89.00",
-    },
-    {
-      id: "#3206",
-      status: "Shipped",
-      customer: "James Wilson",
-      product: "Clck Smart Scale",
-      amount: "$59.00",
-    },
-  ];
+  const [orders, setOrders] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getOrderDetails();
+  }, [dispatch]);
+
+  const getOrderDetails = async () => {
+    const response = await dispatch(getOrders());
+    setOrders(response.payload.data);
+  }
 
   const stats = [
     { title: "Total Revenue", value: "$45,231.89", change: "+20.1%" },
@@ -69,51 +46,64 @@ function Dashboard() {
       <div className="mt-8">
         <h3 className="text-xl font-bold mb-4 text-gray-800">Recent Orders</h3>
         <div className="bg-white rounded-lg shadow-md overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th className="px-6 py-3 bg-gray-50">Order</th>
-                <th className="px-6 py-3 bg-gray-50">Status</th>
-                <th className="px-6 py-3 bg-gray-50">Customer</th>
-                <th className="px-6 py-3 bg-gray-50">Product</th>
-                <th className="px-6 py-3 bg-gray-50 text-right">Amount</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((order, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-gray-50 transition-colors duration-200"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {order.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        order.status === "Shipped"
-                          ? "bg-green-100 text-green-800"
-                          : order.status === "Processing"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {order.customer}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {order.product}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
-                    {order.amount}
-                  </td>
+        <table className="w-full min-w-[640px]">
+              <thead>
+                <tr className="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-4 md:px-6 py-3">Order ID</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3">Status</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3">Products</th>
+                  <th className="px-3 sm:px-4 md:px-6 py-3 text-right">Total Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {orders.map((order, index) => (
+                  <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                    <td className="px-3 sm:px-4 md:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      #{order.id}
+                    </td>
+                    <td className="px-3 sm:px-4 md:px-6 py-4 whitespace-nowrap text-sm">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          order.status === "pending" ?
+                          "bg-gray-100 text-gray-800"
+                          : order.status === "Shipped"
+                            ? "bg-green-100 text-green-800"
+                            : order.status === "Processing"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                    </td>
+                    
+                    <td className="px-3 sm:px-4 md:px-6 py-4 text-sm text-gray-500">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {order.items.map((item, index) => (
+                          <Link
+                            key={index}
+                            to={`/product/${item.product.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center bg-gray-100 rounded-full px-2 sm:px-3 py-1 hover:bg-gray-200 transition duration-200"
+                          >
+                            <img
+                              src={item.product.image}
+                              alt={item.product.name}
+                              className="w-4 h-4 sm:w-6 sm:h-6 object-cover rounded-full mr-1 sm:mr-2"
+                            />
+                            <span className="text-xs truncate max-w-[80px] sm:max-w-[120px]">{item.product.name}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-3 sm:px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">
+                      ${order.total_price.toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
         </div>
       </div>
     </main>

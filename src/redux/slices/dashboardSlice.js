@@ -4,7 +4,8 @@ import axiosInstance from "../../config/axiosInstance";
 
 const initialState = {
     products: [],
-    categories: []
+    categories: [],
+    orders: []
 };
 
 export const addCategory = createAsyncThunk("dashboard/addCategory", async (category) => {
@@ -101,6 +102,30 @@ export const getProducts = createAsyncThunk("dashboard/getProducts", async () =>
     }
 })
 
+export const getOrders = createAsyncThunk("dashboard/getOrders", async () => {
+    try {
+        const response = await axiosInstance.get("/order");
+        return response.data;
+    } catch (error) {
+        toast.error("Error Fetching Orders", {
+            position: "bottom-right"
+        });
+        throw error;
+    }
+})
+
+export const updateOrderStatus = createAsyncThunk("dashboard/updateOrderStatus", async ({id, status}) => {
+    try {
+        const response = await axiosInstance.patch(`/order/${id}`, {status});
+        return response.data;
+    } catch (error) {
+        toast.error("Error Updating Order Status", {
+            position: "bottom-right"
+        });
+        throw error;
+    }
+})
+
 export const dashboardSlice = createSlice({
     name: "dashboard",
     initialState,
@@ -108,6 +133,9 @@ export const dashboardSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getCategories.fulfilled, (state, action) => {
             state.categories = action.payload;
+        })
+        builder.addCase(getOrders.fulfilled, (state, action) => {
+            state.orders = action.payload;
         })
     }
 });
