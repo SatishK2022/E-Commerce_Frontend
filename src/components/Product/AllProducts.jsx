@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useScrollToTop from "../../hooks/userScrollToTop";
-import { CgSpinner } from "react-icons/cg";
+import { CgShoppingCart, CgSpinner } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { FaSearch, FaChevronDown } from "react-icons/fa";
 import { getProducts } from "../../redux/slices/productSlice";
+import { BiStar } from "react-icons/bi";
 
 function AllProducts() {
   useScrollToTop();
@@ -55,6 +56,7 @@ function AllProducts() {
       <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800 underline decoration-violet-600 underline-offset-8 pb-4">
         Our <span className="text-violet-600">Products</span>
       </h1>
+      
       <div className="mb-8 flex justify-end">
         <button
           onClick={() => setShowFilters(!showFilters)}
@@ -63,6 +65,7 @@ function AllProducts() {
           {showFilters ? 'Hide Filters' : 'Show Filters'}
         </button>
       </div>
+      
       {showFilters && (
         <div className="sticky top-16 z-10 flex flex-col sm:flex-row gap-4 mb-8 bg-white rounded-lg shadow-md p-4 sm:p-5 border border-gray-300">
           <div className="flex-1 relative">
@@ -91,6 +94,7 @@ function AllProducts() {
           </div>
         </div>
       )}
+      
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <CgSpinner className="animate-spin text-violet-600 text-4xl" />
@@ -101,23 +105,27 @@ function AllProducts() {
             <Link
               to={`/product/${product.id}`}
               key={product.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 flex flex-col h-full border border-gray-300 hover:shadow-lg hover:border-violet-300"
+              className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 flex flex-col h-full border border-gray-200 hover:shadow-lg hover:border-violet-300"
             >
-              <div className="h-48 sm:h-56 p-4 flex items-center justify-center">
+              <div className="relative p-4 overflow-hidden group">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-105"
+                  className="h-48 w-full object-contain transition-transform duration-300 group-hover:scale-110"
                 />
+                <div className="absolute top-2 right-2 bg-violet-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                  {product.category}
+                </div>
               </div>
               <div className="p-4 sm:p-6 flex-grow flex flex-col justify-between">
                 <div>
                   <h2 className="text-lg sm:text-xl font-semibold mb-2 text-gray-800 truncate">
                     {product.name}
                   </h2>
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2 sm:line-clamp-3">
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-1 sm:line-clamp-2">
                     {product.description}
                   </p>
+                  
                 </div>
                 <div className="flex justify-between items-center mt-auto">
                   <p className="text-xl sm:text-2xl font-bold text-violet-600">
@@ -125,8 +133,9 @@ function AllProducts() {
                   </p>
                   <button
                     onClick={(e) => handleAddToCart(e, product)}
-                    className="bg-violet-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full hover:bg-violet-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50 text-sm sm:text-base"
+                    className="bg-violet-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full hover:bg-violet-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50 text-sm sm:text-base flex items-center"
                   >
+                    <CgShoppingCart className="mr-2" />
                     Add to Cart
                   </button>
                 </div>

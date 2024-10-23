@@ -107,9 +107,7 @@ export const getOrders = createAsyncThunk("dashboard/getOrders", async () => {
         const response = await axiosInstance.get("/order");
         return response.data;
     } catch (error) {
-        toast.error("Error Fetching Orders", {
-            position: "bottom-right"
-        });
+        console.error("Error Fetching Orders", error);
         throw error;
     }
 })

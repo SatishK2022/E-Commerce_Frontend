@@ -46,7 +46,8 @@ function Dashboard() {
       <div className="mt-8">
         <h3 className="text-xl font-bold mb-4 text-gray-800">Recent Orders</h3>
         <div className="bg-white rounded-lg shadow-md overflow-x-auto">
-        <table className="w-full min-w-[640px]">
+          {orders.slice(0, 3).length > 0 ? (
+            <table className="w-full min-w-[640px]">
               <thead>
                 <tr className="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   <th className="px-3 sm:px-4 md:px-6 py-3">Order ID</th>
@@ -56,7 +57,7 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {orders.map((order, index) => (
+                {orders.slice(0, 3).map((order, index) => (
                   <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
                     <td className="px-3 sm:px-4 md:px-6 py-4 whitespace-nowrap text-sm font-medium">
                       #{order.id}
@@ -104,6 +105,11 @@ function Dashboard() {
                 ))}
               </tbody>
             </table>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              No orders found.
+            </div>
+          )}
         </div>
       </div>
     </main>

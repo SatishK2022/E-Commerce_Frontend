@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, clearCart, removeFromCart } from "../../redux/slices/cartSlice";
 import { FaPlus, FaMinus, FaTrash, FaShoppingCart } from "react-icons/fa";
@@ -10,10 +10,19 @@ function Cart() {
   const navigate = useNavigate();
 
   const { cartItems, totalAmount } = useSelector((state) => state.cart);
+  const { isLoggedIn } = useSelector((state) => state.auth);
   const [showConfirmModal, setShowConfirmModal] = useState({
     show: false,
     item: null,
   });
+
+  useEffect(() => {
+    if (isLoggedIn && localStorage.getItem('pendingOrder')) {
+      const pendingOrder = JSON.parse(localStorage.getItem('pendingOrder'));
+      handleCheckout(pendingOrder);
+      localStorage.removeItem('pendingOrder');
+    }
+  }, [isLoggedIn]);
 
   const updateQuantity = (item, newQuantity) => {
     if (newQuantity > item.quantity) {
@@ -25,8 +34,16 @@ function Cart() {
     }
   };
 
-  const handleCheckout = async () => {
-    const response = await dispatch(createOrder({total_price: totalAmount, order_items: cartItems}));
+  const handleCheckout = async (orderData = null) => {
+    if (!isLoggedIn) {
+      localStorage.setItem('pendingOrder', JSON.stringify({total_price: totalAmount, order_items: cartItems}));
+      navigate('/login');
+      return;
+    }
+
+    const dataToSend = orderData || {total_price: totalAmount, order_items: cartItems};
+
+    const response = await dispatch(createOrder(dataToSend));
 
     console.log("response cart", response);
 
@@ -215,8 +232,8 @@ function Cart() {
                       <span>${parseFloat(total).toFixed(2)}</span>
                     </div>
                   </div>
-                  <button onClick={handleCheckout} className="w-full bg-violet-600 text-white py-3 px-4 rounded-lg mt-6 hover:bg-violet-700 transition duration-300 font-medium">
-                    Proceed to Checkout
+                  <button onClick={() => handleCheckout()} className="w-full bg-violet-600 text-white py-3 px-4 rounded-lg mt-6 hover:bg-violet-700 transition duration-300 font-medium">
+                    {isLoggedIn ? 'Proceed to Checkout' : 'Login to Checkout'}
                   </button>
                 </div>
               </div>

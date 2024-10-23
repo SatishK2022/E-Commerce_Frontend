@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../redux/slices/authSlice";
 import { FaArrowLeft } from "react-icons/fa";
@@ -8,6 +8,7 @@ import { FaArrowLeft } from "react-icons/fa";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const pendingOrders = useSelector((state) => state.cart.cartItems.length > 0);
 
   const { register, handleSubmit } = useForm();
 
@@ -15,7 +16,12 @@ function Login() {
     const response = await dispatch(loginUser(data));
 
     if (response.payload.success) {
-      navigate("/");
+      if (pendingOrders) {
+        navigate("/cart");
+      } else {
+        navigate("/");
+      }
+      window.location.reload();
     }
   };
 

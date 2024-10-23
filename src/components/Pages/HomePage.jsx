@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import useScrollToTop from "../../hooks/userScrollToTop";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
+import { getProducts } from "../../redux/slices/productSlice";
+import { FaTimes } from "react-icons/fa";
 
 function HomePage() {
   useScrollToTop();
@@ -18,16 +20,18 @@ function HomePage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((response) => setProducts(response.data))
-      .catch((error) => console.log(error));
+    getProductDetails();
   }, []);
+
+  const getProductDetails = async () => {
+    const response = await dispatch(getProducts());
+    setProducts(response.payload.data);
+  }
 
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(addToCart(product));
+    dispatch(addToCart({...product, quantity: 1}));
   }
 
   const handleQuickView = (product) => {
@@ -133,24 +137,11 @@ function HomePage() {
                     </Link>
                     <div className="p-4 sm:p-6">
                       <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 truncate">
-                        {product.title}
+                        {product.name}
                       </h3>
-                      <div className="flex items-center mb-2">
-                        {[...Array(5)].map((_, i) => (
-                          <BiStar
-                            key={i}
-                            className={`h-4 w-4 sm:h-5 sm:w-5 ${
-                              i < Math.floor(product.rating.rate)
-                                ? "text-yellow-400"
-                                : "text-gray-300"
-                            }`}
-                            fill="currentColor"
-                          />
-                        ))}
-                        <span className="ml-2 text-xs sm:text-sm text-gray-600">
-                          ({product.rating.count})
-                        </span>
-                      </div>
+                      <p className="text-sm text-gray-600 mb-2 truncate">
+                        {product.description}
+                      </p>
                       <div className="flex items-center justify-between">
                         <span className="text-lg sm:text-xl md:text-2xl font-bold text-violet-600">
                           ${product.price.toFixed(2)}
@@ -241,46 +232,31 @@ function HomePage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg max-w-2xl w-full">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-2xl font-bold">{selectedProduct.title}</h2>
-              <button onClick={closeQuickView} className="text-gray-500 hover:text-gray-700">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+              <h2 className="text-2xl font-bold text-gray-800">{selectedProduct.name}</h2>
+              <button onClick={closeQuickView} className="text-gray-500 hover:text-gray-700 transition-colors duration-300">
+                <FaTimes className="h-6 w-6" />
               </button>
             </div>
-            <div className="flex flex-col md:flex-row">
-              <div className="md:w-1/2 mb-4 md:mb-0">
-                <img src={selectedProduct.image} alt={selectedProduct.title} className="w-full h-auto object-contain" />
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="md:w-1/2">
+                <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-auto object-contain rounded-lg shadow-md" />
               </div>
-              <div className="md:w-1/2 md:pl-4">
-                <p className="text-gray-600 mb-4">{selectedProduct.description}</p>
-                <p className="text-2xl font-bold text-violet-600 mb-4">${selectedProduct.price.toFixed(2)}</p>
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <BiStar
-                      key={i}
-                      className={`h-5 w-5 ${
-                        i < Math.floor(selectedProduct.rating.rate)
-                          ? "text-yellow-400"
-                          : "text-gray-300"
-                      }`}
-                      fill="currentColor"
-                    />
-                  ))}
-                  <span className="ml-2 text-sm text-gray-600">
-                    ({selectedProduct.rating.count} reviews)
-                  </span>
+              <div className="md:w-1/2 flex flex-col justify-between">
+                <div>
+                  <p className="text-gray-600 mb-4 text-sm leading-relaxed">{selectedProduct.description}</p>
+                  <p className="text-3xl font-bold text-violet-600 mb-4">${selectedProduct.price.toFixed(2)}</p>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-col space-y-3">
                   <button
                     onClick={(e) => handleAddToCart(e, selectedProduct)}
-                    className="bg-violet-600 text-white px-4 py-2 rounded-full hover:bg-violet-700 transition-colors duration-300"
+                    className="w-full bg-violet-600 text-white px-4 py-2 rounded-full hover:bg-violet-700 transition-colors duration-300 flex items-center justify-center"
                   >
+                    <CgShoppingCart className="h-5 w-5 mr-2" />
                     Add to Cart
                   </button>
                   <Link
                     to={`/product/${selectedProduct.id}`}
-                    className="bg-gray-200 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-300 transition-colors duration-300"
+                    className="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-300 transition-colors duration-300 text-center"
                   >
                     View Details
                   </Link>

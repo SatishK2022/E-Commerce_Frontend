@@ -67,11 +67,14 @@ function Header() {
       name: "Categories",
       path: "/categories",
     },
-    {
+  ];
+
+  if (isLoggedIn) {
+    navLinks.push({
       name: "My Orders",
       path: "/orders",
-    },
-  ];
+    });
+  }
 
   if (!isLoggedIn) {
     navLinks.push(
