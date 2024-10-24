@@ -24,6 +24,8 @@ function MyOrders() {
     setLoading(false);
   };
 
+  console.log("orders", orders);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -119,12 +121,12 @@ function MyOrders() {
                             <div className="flex-grow mb-4 sm:mb-0">
                               <p className="font-medium text-lg text-gray-800 mb-1">{item.product_name}</p>
                               <p className="text-sm text-gray-600">
-                                Price: <span className="font-semibold">${item.price.toFixed(2)}</span> each
+                                Price: <span className="font-semibold">${item.product_price.toFixed(2)}</span> each
                               </p>
                             </div>
                             <div className="text-right">
                               <p className="font-semibold text-lg text-violet-600">
-                                ${(item.price * item.quantity).toFixed(2)}
+                                ${(item.product_price * item.quantity).toFixed(2)}
                               </p>
                               <p className="text-xs text-gray-500">Total for item</p>
                             </div>

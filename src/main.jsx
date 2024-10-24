@@ -7,6 +7,7 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
+  Navigate,
 } from "react-router-dom";
 import HomePage from "./components/Pages/HomePage.jsx";
 import Login from "./components/Pages/Login.jsx";
@@ -49,9 +50,9 @@ const RouterWrapper = () => {
         >
           {role === "admin" ? (
             <>
-              {isLoggedIn && (
+              {isLoggedIn ? (
                 <>
-                  <Route path="/" element={<Dashboard />} />
+                  <Route index element={<Dashboard />} />
                   <Route path="products" element={<Products />} />
                   <Route path="orders" element={<Orders />} />
                   <Route
@@ -63,6 +64,8 @@ const RouterWrapper = () => {
                     }
                   />
                 </>
+              ) : (
+                <Route index element={<Navigate to="/login" replace />} />
               )}
             </>
           ) : (
@@ -82,21 +85,24 @@ const RouterWrapper = () => {
                   </RequireAuth>
                 }
               />
-              <Route path="orders" element={<MyOrders />} />
+              <Route
+                path="orders"
+                element={
+                  <RequireAuth>
+                    <MyOrders />
+                  </RequireAuth>
+                }
+              />
             </>
           )}
         </Route>
         <Route path="checkout/success" element={<CheckoutSuccess />} />
         <Route path="checkout/failed" element={<CheckoutFailed />} />
-        {!isLoggedIn && (
-          <>
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="verify-otp" element={<VerifyOtp />} />
-            <Route path="reset-password" element={<ResetPassword />} />
-          </>
-        )}
+        <Route path="login" element={isLoggedIn ? <Navigate to="/" replace /> : <Login />} />
+        <Route path="register" element={isLoggedIn ? <Navigate to="/" replace /> : <Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="verify-otp" element={<VerifyOtp />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
       </>
     )
@@ -105,11 +111,17 @@ const RouterWrapper = () => {
   return <RouterProvider router={router} />;
 };
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
+const Root = () => {
+  return (
     <Provider store={store}>
       <RouterWrapper />
       <ToastContainer autoClose={2000} />
     </Provider>
+  );
+};
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <Root />
   </StrictMode>
 );

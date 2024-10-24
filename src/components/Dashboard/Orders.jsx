@@ -58,6 +58,7 @@ function Orders() {
               <option value="Shipped">Shipped</option>
               <option value="Processing">Processing</option>
               <option value="Cancelled">Cancelled</option>
+              <option value="Delivered">Delivered</option>
             </select>
             <button className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
               <FaFilter />
@@ -99,6 +100,8 @@ function Orders() {
                               ? "bg-green-100 text-green-800"
                               : order.status === "Processing"
                               ? "bg-yellow-100 text-yellow-800"
+                              : order.status === "Delivered"
+                              ? "bg-green-100 text-green-800"
                               : "bg-red-100 text-red-800"
                           }`}
                         >
@@ -139,6 +142,7 @@ function Orders() {
                           <option value="Shipped">Shipped</option>
                           <option value="Processing">Processing</option>
                           <option value="Cancelled">Cancelled</option>
+                          <option value="Delivered">Delivered</option>
                         </select>
                       </td>
                     </tr>

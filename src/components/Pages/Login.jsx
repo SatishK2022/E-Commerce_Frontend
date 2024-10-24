@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, redirect } from "react-router-dom";
 import { loginUser } from "../../redux/slices/authSlice";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -15,13 +15,14 @@ function Login() {
   const onSubmit = async (data) => {
     const response = await dispatch(loginUser(data));
 
-    if (response.payload.success) {
+    console.log("response", response);
+
+    if (response?.payload?.success) {
       if (pendingOrders) {
         navigate("/cart");
       } else {
         navigate("/");
       }
-      window.location.reload();
     }
   };
 
