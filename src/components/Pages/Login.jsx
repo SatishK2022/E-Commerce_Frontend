@@ -27,7 +27,7 @@ function Login() {
   };
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate('/');
   };
 
   return (

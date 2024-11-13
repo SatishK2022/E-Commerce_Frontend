@@ -16,7 +16,8 @@ function AllProducts() {
   const [sortBy, setSortBy] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const dispatch = useDispatch();
-  // const products = useSelector((state) => state.product.products);
+  const cart = useSelector((state) => state.cart.items);
+  const [addedToCart, setAddedToCart] = useState([]);
 
   useEffect(() => {
     getAllProducts();
@@ -26,7 +27,6 @@ function AllProducts() {
     try {
       const response = await dispatch(getProducts());
       setProducts(response.payload.data);
-      console.log("response", response.payload.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -49,6 +49,10 @@ function AllProducts() {
     e.preventDefault();
     e.stopPropagation();
     dispatch(addToCart({ ...product, quantity: 1 }));
+    setAddedToCart([...addedToCart, product.id]);
+    setTimeout(() => {
+      setAddedToCart(addedToCart.filter((id) => id !== product.id));
+    }, 2000);
   };
 
   return (
@@ -128,15 +132,19 @@ function AllProducts() {
                   
                 </div>
                 <div className="flex justify-between items-center mt-auto">
-                  <p className="text-xl sm:text-2xl font-bold text-violet-600">
+                  <p className="text-xl font-bold text-violet-600">
                     ${product.price.toFixed(2)}
                   </p>
                   <button
                     onClick={(e) => handleAddToCart(e, product)}
-                    className="bg-violet-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full hover:bg-violet-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50 text-sm sm:text-base flex items-center"
+                    className={`bg-violet-600 text-white px-3 py-2 font-semibold rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50 text-sm  flex items-center ${
+                      addedToCart.includes(product.id)
+                        ? "bg-green-600 hover:bg-green-700"
+                        : "bg-violet-600 hover:bg-violet-700"
+                    }`}
                   >
-                    <CgShoppingCart className="mr-2" />
-                    Add to Cart
+                    <CgShoppingCart className="mr-1 sm:mr-2" />
+                    {addedToCart.includes(product.id) ? "Added" : "Add to Cart"}
                   </button>
                 </div>
               </div>
